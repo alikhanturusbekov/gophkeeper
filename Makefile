@@ -5,17 +5,11 @@
 #   make postgres       # start PostgreSQL in Docker (background)
 #   make run-server     # build & run the server against local postgres
 #
-#   # in another terminal:
 #   make build-client
-#   ./bin/gophkeeper --master-password=secret register -l alice -p password
-#   ./bin/gophkeeper --master-password=secret add credential -n github -l alice -p hunter2
-#   ./bin/gophkeeper --master-password=secret list
+#   GOPHKEEPER_MASTER=secret GOPHKEEPER_SECRET=secret ./bin/gophkeeper register -l alice -p password
+#   GOPHKEEPER_MASTER=secret GOPHKEEPER_SECRET=secret ./bin/gophkeeper --master-password=secret add credential -n github -l alice -p hunter2
+#   GOPHKEEPER_MASTER=secret GOPHKEEPER_SECRET=secret ./bin/gophkeeper --master-password=secret list
 #
-# Prerequisites:
-#   - Go 1.26+
-#   - Docker (for PostgreSQL)
-#   - gcc / musl-gcc (only for the client binary, which uses cgo for SQLite)
-# ───────────────────────────────────────────────────────────────────────────────
 
 MODULE  := github.com/alikhanturusbekov/gophkeeper
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
