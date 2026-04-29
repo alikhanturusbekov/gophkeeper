@@ -61,8 +61,6 @@ func (m *Manager) Generate(userID string) (string, error) {
 
 // Validate parses and verifies tokenStr, returning the embedded userID
 func (m *Manager) Validate(tokenStr string) (string, error) {
-	fmt.Println("Starting to validate token")
-
 	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -70,21 +68,14 @@ func (m *Manager) Validate(tokenStr string) (string, error) {
 		return m.secret, nil
 	})
 
-	fmt.Println("Is there anything")
-
 	if err != nil {
-		fmt.Println("er1")
-		_ = fmt.Errorf("error 1: %s", err)
 		return "", ErrInvalidToken
 	}
 	claims, ok := token.Claims.(*Claims)
 
 	if !ok || !token.Valid {
-		fmt.Println("er2")
-		_ = fmt.Errorf("error 2: %s", err)
 		return "", ErrInvalidToken
 	}
 
-	fmt.Println("er3")
 	return claims.UserID, nil
 }
