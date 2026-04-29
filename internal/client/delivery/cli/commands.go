@@ -57,7 +57,7 @@ func versionCmd() *cobra.Command {
 		Use:   "version",
 		Short: "Print the client version and build date",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println(version.Info())
+			fmt.Fprintln(cmd.OutOrStdout(), version.Info())
 		},
 	}
 }
@@ -113,7 +113,7 @@ func (a *App) loginCmd() *cobra.Command {
 				return fmt.Errorf("token from server invalid: %w", err)
 			}
 			a.uc.SetSession(uid, token)
-			fmt.Println("Logged in successfully.")
+			fmt.Fprintln(cmd.OutOrStdout(), "Logged in successfully.")
 			return nil
 		},
 	}
@@ -133,7 +133,7 @@ func (a *App) syncCmd() *cobra.Command {
 			if err := a.uc.Sync(context.Background()); err != nil {
 				return fmt.Errorf("sync: %w", err)
 			}
-			fmt.Println("Sync completed successfully.")
+			fmt.Fprintln(cmd.OutOrStdout(), "Sync completed successfully.")
 			return nil
 		},
 	}
@@ -150,13 +150,13 @@ func (a *App) listCmd() *cobra.Command {
 				return err
 			}
 			if len(secrets) == 0 {
-				fmt.Println("No secrets found. Use 'gophkeeper add' to create one.")
+				fmt.Fprintln(cmd.OutOrStdout(), "No secrets found. Use 'gophkeeper add' to create one.")
 				return nil
 			}
 			fmt.Printf("%-36s  %-20s  %-12s  %s\n", "ID", "NAME", "KIND", "METADATA")
 			fmt.Println("-------------------------------------------------------------------------------------")
 			for _, s := range secrets {
-				fmt.Printf("%-36s  %-20s  %-12s  %s\n", s.ID, s.Name, string(s.Kind), s.Metadata)
+				fmt.Fprintf(cmd.OutOrStdout(), "%-36s  %-20s  %-12s  %s\n", s.ID, s.Name, string(s.Kind), s.Metadata)
 			}
 			return nil
 		},
